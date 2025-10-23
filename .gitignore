@@ -1,0 +1,39 @@
+# .gitignore
+
+# ------------------
+# ENVIRONNEMENTS VIRTUELS
+# ------------------
+# Dossier de l'environnement virtuel Python
+venv/
+
+# ------------------
+# PYTHON
+# ------------------
+# Fichiers de cache de Python
+__pycache__/
+*.pyc
+
+# Fichiers de migration de Django (ne pas ignorer, sauf SQLite)
+# Les migrations sont importantes pour le déploiement.
+
+# ------------------
+# FICHIERS DE BASE DE DONNÉES
+# ------------------
+# Ignore la base de données SQLite (elle doit être recréée sur le serveur)
+db.sqlite3
+
+# ------------------
+# FICHIERS DIVERS ET LOGS
+# ------------------
+*.log
+
+# Fichiers de paramètres locaux (pour ne pas publier les clés secrètes)
+# C'est une bonne pratique de créer un fichier de settings local
+config/settings_local.py
+
+# ------------------
+# MEDIA UPLOADS
+# ------------------
+# Fichiers médias téléchargés par les utilisateurs (images, vidéos)
+# Ceux-ci doivent être stockés sur un service de stockage externe en production
+media/
