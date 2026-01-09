@@ -1,68 +1,98 @@
-{% extends "core/base.html" %}
-{% load static %} {% block title %}{{ article.title }} - Polymath{% endblock %}
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ article.title }} - Polymath{% endblock %}
+
 {% block content %}
-<article class="article-shell">
-  <header class="article-hero">
-    {% if article.hero %}
-      <img id="hero-image" src="{{ article.hero.url }}" alt="{{ article.title }}" class="hero-image">
-    {% elif article.featured_image %}
-      <img id="hero-image" src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="hero-image">
-    {% else %}
-      <img id="hero-image" src="{% static 'assets/images/default_hero.jpg' %}" alt="Image par défaut" class="hero-image">
+<link rel='stylesheet' href='{% static ' core/assets/css/project.css' %}?v=4'>
+<link rel='stylesheet' href='{% static ' core/assets/css/article.css' %}?v=5'>
+<style>
+  .project-main .article-body {
+    max-width: 100% !important;
+    margin: 0 0 4rem 0 !important;
+  }
+
+  .project-hero-header.article-mode {
+    height: 50vh;
+    min-height: 350px;
+  }
+
+  .project-layout {
+    min-height: 50vh;
+  }
+</style>
+
+<div class='classic-article-header'
+  style='max-width: 900px; margin: 6rem auto 2rem auto; padding: 0 1.5rem; text-align: center;'>
+  {% if article.category %}
+  <span class='badge-difficulty'
+    style='background: var(--accent); color: white; display: inline-block; margin-bottom: 1.5rem;'>{{
+    article.category.name }}</span>
+  {% else %}
+  <span class='badge-difficulty'
+    style='background: #64748b; color: white; display: inline-block; margin-bottom: 1.5rem;'>Article</span>
+  {% endif %}
+
+  <h1 style='color: var(--text); font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 1.5rem; line-height: 1.2;'>{{
+    article.title }}</h1>
+
+  <div class='project-duration' style='justify-content: center; color: var(--muted); margin-bottom: 3rem;'>
+    <span>{{ article.date_published|date:'d F Y' }}</span>
+    <span style='margin: 0 0.5rem;'>•</span>
+    {% if article.author %}
+    <span>{{ article.author.username }}</span>
     {% endif %}
-
-    <div class="hero-inner">
-      <p class="kicker">{{ article.category }}</p>
-      <h1>{{ article.title }}</h1>
-      <div class="meta">
-        
-        {% if article.author %} 
-        <div class="author">
-          <img src="{% if article.author.avatar.url %}
-                       {{ article.author.avatar.url }}
-                   {% else %}
-                       {% static 'assets/avatars/default_user.png' %}
-                   {% endif %}"
-               class="author-avatar">
-          <div>
-            <div>{{ article.author.name }}</div>
-            <div class="muted">{{ article.date_published }}</div>
-          </div>
-        </div>
-        {% else %}
-        <div class="author">
-            <div class="muted">Auteur indisponible</div>
-        </div>
-        {% endif %} 
-        <div class="share">
-          <a href="#" class="share-btn">Partager</a>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="article-body">
-    {{ article.content|safe }}
   </div>
 
-  {% if article.author %} 
-  <aside class="article-author-card">
-    <img src="{% if article.author.profil.avatar.url %}
-                   {{ article.author.profil.avatar.url }}
-               {% else %}
-                   {% static 'assets/avatars/default_user.png' %}
-               {% endif %}"
-         alt="avatar">
-    <div>
-      <h3>{{ article.author.name }}</h3>
-      <p>{{ article.author.bio }}</p>
-      <a href="{% url 'profil_detail' article.author.pk %}">Voir le profil</a>
+  {% if article.hero %}
+  <img src='{{ article.hero.url }}' alt='{{ article.title }}'
+    style='width: 100%; height: auto; border-radius: 16px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);'>
+  {% elif article.featured_image %}
+  <img src='{{ article.featured_image.url }}' alt='{{ article.title }}'
+    style='width: 100%; height: auto; border-radius: 16px; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.15);'>
+  {% else %}
+  <div style='width: 100%; height: 400px; background: linear-gradient(45deg, #0f172a, #334155); border-radius: 16px;'>
+  </div>
+  {% endif %}
+</div>
+
+<div class='project-layout'>
+  <main class='project-main'>
+    <article class='article-body'>
+      {{ article.content|safe }}
+    </article>
+    {% if article.author %}
+    <aside class='article-author-card'>
+      <img src='{% if article.author.profil.avatar %}{{ article.author.profil.avatar.url }}{% else %}{% static '
+        core/assets/icons/default_user.svg' %}{% endif %}' alt='avatar'>
+      <div>
+        <h3>{{ article.author.username }}</h3>
+        <p>Auteur sur Polymath</p>
+        <a href='{% url ' profil_detail' article.author.pk %}'>Voir le profil</a>
+      </div>
+    </aside>
+    {% endif %}
+
+    <!-- Comments Section -->
+    {% include "core/includes/comments.html" with object=article comments=comments comment_form=comment_form %}
+  </main>
+
+  <aside class='project-sidebar'>
+    <div class='sidebar-card'>
+      <h3>Détails</h3>
+      <ul class='project-meta-list' style='list-style:none; padding:0; margin:0;'>
+        <li><span class='muted'>Catégorie</span><strong>{{ article.category.name|default:'Non classé' }}</strong></li>
+        <li><span class='muted'>Publication</span><strong>{{ article.date_published|date:'M Y' }}</strong></li>
+        <li><span class='muted'>Temps de lecture</span><strong>{{ article.reading_time|default:'5' }} min</strong></li>
+      </ul>
+    </div>
+    <div class='sidebar-card'>
+      <h3>Partager</h3>
+      <div class='tech-stack-list'>
+        <a href='#' class='tech-badge' style='text-decoration:none;'>LinkedIn</a>
+        <a href='#' class='tech-badge' style='text-decoration:none;'>Twitter</a>
+        <a href='#' class='tech-badge' style='text-decoration:none;'>Facebook</a>
+      </div>
     </div>
   </aside>
-  {% else %}
-  <aside class="article-author-card">
-    <p>Information auteur indisponible.</p>
-  </aside>
-  {% endif %}
-  </article>
+</div>
 {% endblock %}

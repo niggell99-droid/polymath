@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User # On utilise le modèle User natif de Django
 from django.urls import reverse 
-from ckeditor_uploader.fields import RichTextUploadingField
+from django_ckeditor_5.fields import CKEditor5Field
 from django.utils import timezone
 
 # 1. Modèle pour les Catégories
@@ -38,8 +38,8 @@ class Article(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True) # ID pour l'URL
     excerpt = models.TextField(blank=True, help_text="Résumé ou accroche pour la page d'accueil")
-    # RichTextUploadingField (permet d'uploader des images)
-    content = RichTextUploadingField(verbose_name="Contenu de l'article")
+    # CKEditor5Field for rich text editing
+    content = CKEditor5Field('Contenu de l\'article', config_name='extends')
 
     # Relations
     author = models.ForeignKey(User, on_delete=models.CASCADE) # L'auteur
@@ -57,7 +57,8 @@ class Article(models.Model):
     )
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=False)
-    is_featured = models.BooleanField(default=False, help_text="Afficher sur la page d'accueil (Hero)")
+    # is_featured = models.BooleanField(default=False, help_text="Afficher sur la page d'accueil (Hero)")
+    is_featured = models.BooleanField(default=False, verbose_name="Mis en avant sur la page d'accueil")
 
     reading_time = models.IntegerField(
         default=0,

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django_ckeditor_5.fields import CKEditor5Field
 
 
 # Modele pout les outils/technologies specifiques a l'ingenierie (ex : Arduino, CAD, Python, etc.)
@@ -26,8 +27,8 @@ class Projet(models.Model):
     slug = models.SlugField(unique=True)
     summary = models.TextField(help_text="Breve description du projet.")
 
-    # Contenu
-    content = models.TextField() # Le guide ou les etapes
+    # Contenu avec CKEditor5
+    content = CKEditor5Field('Guide du projet', config_name='extends')
 
     # Relations
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -49,8 +50,8 @@ class Projet(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        # Nous utiliserons le nom d'URL 'projet_detail' plus tard
-        return reverse('projet_detail', kwargs={'slug': self.slug})
+        # Utilise le namespace 'projets' pour reverse
+        return reverse('projets:projet_detail', kwargs={'slug': self.slug})
     
     # Modele pour les etapes ou les galeries de photos (pour un projet plus visuel)
 class ProjectImage(models.Model):
