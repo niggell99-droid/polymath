@@ -1,0 +1,68 @@
+{% extends "core/base.html" %}
+{% load static %} {% block title %}{{ article.title }} - Polymath{% endblock %}
+{% block content %}
+<article class="article-shell">
+  <header class="article-hero">
+    {% if article.hero %}
+      <img id="hero-image" src="{{ article.hero.url }}" alt="{{ article.title }}" class="hero-image">
+    {% elif article.featured_image %}
+      <img id="hero-image" src="{{ article.featured_image.url }}" alt="{{ article.title }}" class="hero-image">
+    {% else %}
+      <img id="hero-image" src="{% static 'assets/images/default_hero.jpg' %}" alt="Image par défaut" class="hero-image">
+    {% endif %}
+
+    <div class="hero-inner">
+      <p class="kicker">{{ article.category }}</p>
+      <h1>{{ article.title }}</h1>
+      <div class="meta">
+        
+        {% if article.author %} 
+        <div class="author">
+          <img src="{% if article.author.avatar.url %}
+                       {{ article.author.avatar.url }}
+                   {% else %}
+                       {% static 'assets/avatars/default_user.png' %}
+                   {% endif %}"
+               class="author-avatar">
+          <div>
+            <div>{{ article.author.name }}</div>
+            <div class="muted">{{ article.date_published }}</div>
+          </div>
+        </div>
+        {% else %}
+        <div class="author">
+            <div class="muted">Auteur indisponible</div>
+        </div>
+        {% endif %} 
+        <div class="share">
+          <a href="#" class="share-btn">Partager</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="article-body">
+    {{ article.content|safe }}
+  </div>
+
+  {% if article.author %} 
+  <aside class="article-author-card">
+    <img src="{% if article.author.profil.avatar.url %}
+                   {{ article.author.profil.avatar.url }}
+               {% else %}
+                   {% static 'assets/avatars/default_user.png' %}
+               {% endif %}"
+         alt="avatar">
+    <div>
+      <h3>{{ article.author.name }}</h3>
+      <p>{{ article.author.bio }}</p>
+      <a href="{% url 'profil_detail' article.author.pk %}">Voir le profil</a>
+    </div>
+  </aside>
+  {% else %}
+  <aside class="article-author-card">
+    <p>Information auteur indisponible.</p>
+  </aside>
+  {% endif %}
+  </article>
+{% endblock %}

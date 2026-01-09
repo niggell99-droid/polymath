@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="page-header latest-articles">
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p>Retrouvez ici toutes nos analyses, tutoriels et reportages sur les dernieres innovations en ingenierie.</p>
+    </div>
+</section>
+
+<section class="article-list-section latest-articles">
+    <div class="card-list">
+
+        {% for article in articles %}
+        <article class="card">
+            <a href="{{ article.get-absolute_url }}" aria-label="Lire : {{ article.title}}">
+                {% if article.featured_image %}
+                    <img src="{{ article.featured_image.url }}" alt="Image d'illustration pour {{ article.title }}">
+                {% endif %}
+
+                <div class="card-body">
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.excerpt }}</p>
+                    <small>Publie le {{ article.publication_date|date:"j F Y"}} par {{ article.author.username }}</small>
+                </div>
+            </a>
+        </article>
+        {% empty %}
+            <p>Aucun article n'a encore ete publie.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}{{ projet.title }} - Projet Polymath{% endblock %}
+
+{% block content %}
+<article class="article-shell projet-shell">
+    <header class="article-hero">
+        {% if projet.main_image %}
+        <img class="hero-image" src="{{ projet.main_image.url }}" alt="Image principale du projet {{ projet.title }}" id="hero-image">
+        {% endif %}
+
+        <div class="hero-inner">
+            <p class="kicker">Projet | {{ projet.get_difficulty_display }} ({{ projet.duration|default:"Duree N/A"}})</p>
+
+            <h1>{{ projet.title }}</h1>
+            <div class="meta">
+                <div class="author">
+                    <img src="{% static 'core/assets/avatars/default_user.png' %}" alt="Avatar de l'auteur" class="author-avatar">
+                    <div>{{projet.author.first_name }} {{ projet.author.last_name|default:projet.author.username }}</div>
+                    <div class="muted">Publie le {{ projet.publication_date|date:"j F Y"}}</div>
+                </div>
+            </div>
+
+            <div class="tools-list">
+                <strong>Outils:</strong>
+                {% for tool in projet.tools.all %}
+                    <span class="tool-tag">{{ too.name }}</span>
+                {% empty %}
+                    <span class="tool-tag">General</span>
+                {% endfor %}
+            </div>
+        </div>
+    </header>
+
+    <div class="article-body">
+        <p class="summary-intro">{{ projet.summary }}</p>
+        {{ projet.content|safe }}
+
+        {% if projet.images.all %}
+        <section class="projetct-gallery">
+            <h2>Etapes et Galeries</h2>
+            <div class="gallery-grid">
+                {% for image in projet.image.all %}
+                    <figure>
+                        <img src="{{ image.image.url }}" alt="{{ image.caption|default:projet.title }}">
+                        {% if image.caption %} <figcaption>{{ image.caption }}</figcaption>{% endif %}
+                    </figure>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+
+    <aside class="article-author-card">
+        <img src="{% static 'core/assets/avatars/default_user.png' %}" alt="avatar de l'auteur">
+        <div>
+            <h3>A propos de l'auteur : {{ projet.author.username }}</h3>
+            <a href="#">Voir le profil</a>
+        </div>
+    </aside>
+</article>
+{% endbloc %}

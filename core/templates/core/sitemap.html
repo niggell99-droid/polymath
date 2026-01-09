@@ -1,0 +1,117 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-page-header">
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p>Navigation rapide vers toutes les sections du site</p>
+    </div>
+</section>
+
+<section class="latest-articles" style="padding: 4rem 0;">
+    <div class="container">
+        <div class="project-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+
+            <!-- Main Sections -->
+            <div
+                style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Sections principales</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'home' %}"
+                            style="color: var(--text); text-decoration: none;">→ Accueil</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'blog:article_list' %}"
+                            style="color: var(--text); text-decoration: none;">→ Articles</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'projets:projet_list' %}"
+                            style="color: var(--text); text-decoration: none;">→ Projets</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'forum:topic_list' %}"
+                            style="color: var(--text); text-decoration: none;">→ Forum</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'forum:topic_list' %}?tab=actu"
+                            style="color: var(--text); text-decoration: none;">→ Actualités</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'forum:topic_list' %}?tab=live"
+                            style="color: var(--text); text-decoration: none;">→ Live Stream</a></li>
+                </ul>
+            </div>
+
+            <!-- Categories -->
+            <div
+                style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Catégories</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for category in all_categories %}
+                    <li style="margin-bottom: 0.75rem;">
+                        <a href="{% url 'blog:category_articles' slug=category.slug %}"
+                            style="color: var(--text); text-decoration: none;">→ {{ category.name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Recent Articles -->
+            <div
+                style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Articles récents</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for article in recent_articles %}
+                    <li style="margin-bottom: 0.75rem;">
+                        <a href="{{ article.get_absolute_url }}"
+                            style="color: var(--text); text-decoration: none; font-size: 0.95rem;">→ {{
+                            article.title|truncatechars:50 }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Recent Projects -->
+            <div
+                style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Projets récents</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% for project in recent_projects %}
+                    <li style="margin-bottom: 0.75rem;">
+                        <a href="{{ project.get_absolute_url }}"
+                            style="color: var(--text); text-decoration: none; font-size: 0.95rem;">→ {{
+                            project.title|truncatechars:50 }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Legal -->
+            <div
+                style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Informations légales</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'legal' %}"
+                            style="color: var(--text); text-decoration: none;">→ Mentions légales</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'privacy' %}"
+                            style="color: var(--text); text-decoration: none;">→ Confidentialité</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'terms' %}"
+                            style="color: var(--text); text-decoration: none;">→ Conditions d'utilisation</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'contact' %}"
+                            style="color: var(--text); text-decoration: none;">→ Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- User Account -->
+            <div
+                style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 2rem; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="margin-bottom: 1.5rem; color: var(--accent);">Compte utilisateur</h2>
+                <ul style="list-style: none; padding: 0;">
+                    {% if user.is_authenticated %}
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'profil_detail' user.pk %}"
+                            style="color: var(--text); text-decoration: none;">→ Mon profil</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'logout' %}"
+                            style="color: var(--text); text-decoration: none;">→ Déconnexion</a></li>
+                    {% else %}
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'login' %}"
+                            style="color: var(--text); text-decoration: none;">→ Connexion</a></li>
+                    <li style="margin-bottom: 0.75rem;"><a href="{% url 'signup' %}"
+                            style="color: var(--text); text-decoration: none;">→ Inscription</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

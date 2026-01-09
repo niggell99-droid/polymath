@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Inscription - Polymath{% endblock %}
+
+{% block content %}
+<div class="auth-form-container latest-articles">
+    <h1>Créer un compte</h1>
+
+    <form method="post" class="styled-form">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="cta submit-btn">S'inscrire</button>
+    </form>
+
+    <p class="auth-footer-link">
+        Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a>
+    </p>
+</div>
+{% endblock content %}

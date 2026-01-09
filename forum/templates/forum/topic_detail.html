@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="page-header latest-articles">
+    <div class="container">
+        <p class="kicker"><a href="{% url 'forum_home' %}">Forum</a> / Thèmes</p>
+        <h1>{{ topic.name }}</h1>
+        <p>{{ topic.description }}</p>
+
+        <a href="#" class="cta small-cta">Nouveau Sujet</a>
+    </div>
+</section>
+
+<section class="forum-threads-list latest-articles">
+    <table class="forum-table">
+        <thead>
+            <tr>
+                <th>Sujet</th>
+                <th class="stat-col">Messages</th>
+                <th class="stat-col">Vues</th>
+                <th class="last-post-col">Dernière activité</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for thread in threads %}
+            <tr class="{% if thread.is_pinned %}pinned-thread{% endif %}">
+                <td class="thread-info">
+                    <a href="{{ thread.get_absolute_url }}">
+                        <h2>{{ thread.title }}</h2>
+                    </a>
+                    <p class="thread-starter">Par {{ thread.starter.username }} | Il y a {{ thread.created_at|timesince }}</p>
+                </td>
+                <td class="stat-col">{{ thread.num_posts }}</td>
+                <td class="stat-col">{{ thread.views }}</td>
+                <td class="last-post-col">
+                    <p>Il y a {{ thread.updated_at|timesince }}</p>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Aucun sujet n'a encore été créé dans ce thème.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock content %}

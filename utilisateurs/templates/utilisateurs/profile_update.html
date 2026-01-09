@@ -1,0 +1,52 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Édition de Profil - Polymath{% endblock %}
+
+{% block content %}
+<div class="auth-form-container latest-articles profile-edit-shell ">
+    <a href="{% url 'profile_update' %}" class="cta edit-profile-btn"><span>Éditer mon profil</span></a>
+
+    <form method="post" enctype="multipart/form-data" class="styled-form">
+        {% csrf_token %}
+
+        <h2>Informations du compte</h2>
+        {% for field in u_form %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <hr>
+
+        <h2>Détails du profil public</h2>
+        {% for field in p_form %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+            {% if field.name == 'avatar' and field.value %}
+                <p>Avatar actuel :</p>
+                <img src="{{ field.value.url }}" class="current-avatar-preview">
+            {% endif %}
+
+            {{ field }}
+            {% for error in field.errors %}
+                <p class="field-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="cta">Sauvegarder les changements</button>
+        </div>
+    </form>
+    
+    <div class="password-change-actions">
+        <a href="{% url 'password_change' %}">Changer de mot de passe</a>
+    </div>
+</div>
+{% endblock content %}

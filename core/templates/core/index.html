@@ -1,0 +1,184 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+    <div class="container main-content-padding">
+    
+        {# ================================================================= #}
+        {# 1. HERO SECTION : Grand article en pleine largeur avec image de fond #}
+        {# ================================================================= #}
+
+        {% if hero_article and hero_article.featured_image %}
+        <section class="hero-featured" 
+                 aria-labelledby="hero-title"
+                 style="background-image: url('{{ hero_article.featured_image.url }}');">
+            <div class="hero-overlay"></div>
+            <div class="hero-inner">
+                
+                {# Afficher la catégorie principale comme un badge #}
+                {% if hero_article.categories.first %}
+                <span class="category-badge">{{ hero_article.categories.first.name }}</span>
+                {% endif %}
+
+                <h1 id="hero-title"><a href="{{ hero_article.get_absolute_url }}">{{ hero_article.title }}</a></h1>
+                
+                <p class="subtitle">{{ hero_article.excerpt }}</p>
+                
+                <div class="article-meta">
+                    <small>Par <strong>{{ hero_article.author.get_full_name|default:hero_article.author.username }}</strong> — {{ hero_article.publication_date|date:"j F Y" }}</small>
+                </div>
+                
+            </div>
+        </section>
+        {% else %}
+        {# Fallback Hero #}
+        <section class="hero-fallback" aria-labelledby="hero-title">
+            <div class="hero-inner text-center">
+                <h1 id="hero-title">Explorez le futur de la technologie</h1>
+                <p class="subtitle">Tutoriels, projets, articles et analyses — pour ingénieurs & makers.</p>
+                <a class="cta" href="{% url 'blog:article_list' %}">Découvrir les articles</a>
+            </div>
+        </section>
+        {% endif %}
+
+
+        {# ================================================================= #}
+        {# 2. SECTION ARTICLES PRINCIPAUX (Magazine Layout) #}
+        {# ================================================================= #}
+
+        {% if latest_articles %}
+        <section class="section-articles" aria-labelledby="articles-title">
+            <h2 id="articles-title">À la Une & Récents</h2>
+            
+            <div class="main-article-grid">
+                {% for article in latest_articles %}
+                    
+                    {# Le premier article prend une mise en page large #}
+                    {% if forloop.first %}
+                    <article class="featured-card">
+                        <a href="{{ article.get_absolute_url }}" aria-label="Lire : {{ article.title }}" class="img-link">
+                            {% if article.featured_image %}
+                            <img src="{{ article.featured_image.url }}" alt="image d'illustration pour l'article : {{ article.title }}">
+                            {% endif %}
+                        </a>
+                        <div class="card-body">
+                            {% if article.categories.first %}
+                            <span class="category-badge">{{ article.categories.first.name }}</span>
+                            {% endif %}
+
+                            <a href="{{ article.get_absolute_url }}" class="title-link">
+                                <h3>{{ article.title }}</h3>
+                            </a>
+                            <p class="excerpt-text">{{ article.excerpt }}</p>
+                            <div class="card-footer-meta">
+                                <small>Par <strong>{{ article.author.username }}</strong> — {{ article.publication_date|date:"j F Y" }}</small>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    {# Les articles suivants sont dans la grille standard (limités à 4 ou 5 pour le test) #}
+                    {% elif forloop.counter < 6 %}
+                    <article class="card small-card">
+                        <a href="{{ article.get_absolute_url }}" class="img-link">
+                            {% if article.featured_image %}
+                            <img src="{{ article.featured_image.url }}" alt="image d'illustration pour l'article : {{ article.title }}">
+                            {% endif %}
+                        </a>
+                        <div class="card-body">
+                            {% if article.categories.first %}
+                            <span class="category-badge">{{ article.categories.first.name }}</span>
+                            {% endif %}
+                            <a href="{{ article.get_absolute_url }}" class="title-link">
+                                <h4>{{ article.title }}</h4>
+                            </a>
+                            <div class="card-footer-meta">
+                                <small>{{ article.publication_date|date:"j F Y" }}</small>
+                            </div>
+                        </div>
+                    </article>
+                    {% endif %}
+
+                {% empty %}
+                    <p class="text-center">Aucun article n'a été publié pour le moment. Revenez bientôt !</p>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center view-all-link">
+                <a href="{% url 'blog:article_list' %}" class="cta small-cta">Voir tous les articles</a>
+            </div>
+        </section>
+        {% endif %}
+
+
+        {# ================================================================= #}
+        {# 3. CATÉGORIES ET PROJETS (Utilisation d'une grille 2/1 pour l'équilibre) #}
+        {# ================================================================= #}
+        
+        <div class="categories-and-projects">
+
+            {% if main_categories %}
+            <section class="main-categories" aria-labelledby="categories-title">
+                <h2 id="categories-title">Explorer par Thème</h2>
+                <div class="category-list-grid">
+                    {% for category in main_categories %}
+                    <div class="category-card-item">
+                        <a href="{% url 'category_detail' slug=category.slug %}">
+                            <h3>{{ category.name }}</h3>
+                            <p>{{ category.description|default:"Découvrez nos articles et projets sur ce sujet passionnant." }}</p>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="text-center view-all-link">
+                    <a href="#" class="cta small-cta-inverted">Voir tous les thèmes</a> 
+                </div>
+            </section>
+            {% endif %}
+
+
+            {% if latest_projets %}
+            <section class="latest-projets" aria-labelledby="projets-title">
+                <h2 id="projets-title">Dernières Réalisations (Projets)</h2>
+                <div class="project-list-grid">
+                    {% for projet in latest_projets|slice:":3" %} 
+                    <article class="project-card-item">
+                        <a href="{{ projet.get_absolute_url }}">
+                            {% if projet.main_image %}
+                            <img src="{{ projet.main_image.url }}" alt="Image du projet {{ projet.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h4>{{ projet.title }}</h4>
+                                <p>{{ projet.excerpt|truncatechars:80 }}</p>
+                            </div>
+                        </a>
+                    </article>
+                    {% endfor %}
+                </div>
+                <div class="text-center view-all-link">
+                    <a href="{% url 'projet_list' %}" class="cta small-cta">Voir tous les projets</a> 
+                </div>
+            </section>
+            {% endif %}
+        </div>
+    </div>
+    
+    
+    {# ================================================================= #}
+    {# 4. NEWSLETTER CTA (Pleine largeur) #}
+    {# ================================================================= #}
+
+    <section class="newsletter-cta-full">
+        <div class="container cta-inner">
+            <h2>Ne manquez aucune innovation !</h2>
+            <p>Recevez nos meilleurs articles et tutoriels directement dans votre boîte mail.</p>
+            <form action="#" method="post" class="newsletter-form-wide">
+                {% csrf_token %} 
+                <input type="email" placeholder="Votre adresse email" required aria-label="Votre adresse email">
+                <button type="submit" class="cta">S'abonner</button>
+            </form>
+        </div>
+    </section>
+
+{% endblock content %}

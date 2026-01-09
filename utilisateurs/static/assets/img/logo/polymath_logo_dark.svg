@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60">
+  <defs>
+    <linearGradient id="gradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00b4ff"></stop>
+      <stop offset="100%" stop-color="#7c3aed"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="220" height="60" rx="12" fill="#0b1220"></rect>
+  <path d="M20 45 L35 15 L50 45 Z" fill="url(#gradDark)"></path>
+  <text x="65" y="38" font-family="Poppins, sans-serif" font-weight="700" font-size="26" fill="white">Polymath</text>
+  <text x="150" y="38" font-family="Poppins, sans-serif" font-weight="400" font-size="12" fill="#b5b5b5">media</text>
+</svg>

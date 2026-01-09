@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="page-header latest-articles">
+    <div class="container">
+        <p class="kicker">Catégorie</p>
+        <h1>{{ category.name }}</h1>
+        {% if category.description %}
+        <p>{{ category.description }}</p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="article-list-section latest-articles">
+
+    {% if articles %}
+    <div class="card-list">
+
+        {% for article in articles %}
+        <article class="card">
+            <a class="card-link-wrapper" href="{{ article.get_absolute_url }}" aria-label="Lire : {{ article.title }}">
+
+                {% if article.featured_image %}
+                    <img src="{{ article.featured_image.url }}" alt="Image d'illustration pour {{ article.title }}">
+                {% endif %}
+
+                <div class="card-body">
+                    <h3>{{ article.title }}</h3>
+                    <p>{{ article.excerpt }}</p>
+                    <small>Publié le {{ article.publication_date|date:"j F Y" }} par {{ article.author.username }}</small>
+                </div>
+            </a>
+        </article>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <p class="text-center">Aucun article n'est disponible dans cette catégorie pour le moment.</p>
+    {% endif %}
+
+</section>
+{% endblock content %}

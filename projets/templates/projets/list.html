@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-page-header latest-articles">
+    <div class="container">
+        <h1>{{ title}}</h1>
+        <p>Explorez notre base de donnees de projets d'ingenierie, classes par difficulte et outils.</p>
+    </div>
+</section>
+
+<section class="projet-list-section latest-articles">
+    <div class="card-list">
+
+        {% for projet in projets %}
+        <article class="card">
+            <a href="{{ projet.get_absolute_url }}" aria-label="Voir le projet : {{ projet.title }}">
+                {% if projet.main_image %}
+                <img src="{{ projet.main_image.url }}" alt="Image principale pour le projet {{projet.title}}">
+                {% endif %}
+
+                <div class="card-body">
+                    <span class="badgedifficulty-{{ projet.difficulty|lower }}">{{ projet.get_difficulty_display }}</span>
+
+                    <h3>{{ projet.title }}</h3>
+                    <p>{{ projet.summary }}</p>
+
+                    <div class="projet-meta">
+                        <small>Duree estimee : {{ projet.duration|default:"N/A" }}</small>
+                    </div>
+                </div>
+            </a>
+        </article>
+        {% empty %}
+        <p>Aucun projet n'a encore ete publie</p>
+        {% endfor %}
+
+    </div>
+</section>
+{% endblock content %}

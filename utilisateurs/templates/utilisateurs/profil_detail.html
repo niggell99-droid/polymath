@@ -1,0 +1,86 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}{{ user_object.username }} - Profil Polymath{% endblock %}
+
+{% block content %}
+<section class="profile-page-shell latest-articles">
+
+    <header class="profile-header">
+        <img src="{{ profil.avatar.url|default:'/static/core/assets/avatars/default_user.png' }}" 
+            alt="Avatar de {{ user_object.username }}" 
+            class="profile-avatar">
+
+        <div class="profile-info">
+            <h1>{{ user_object.first_name }} {{ user_object.last_name|default:user_object.username }}</h1>
+            <p class="username-display">@{{ user_object.username }}</p>
+
+            {% if profil.is_author %}
+            <span class="badge author-badge">Auteur Vérifié</span>
+            {% endif %}
+
+            <p class="profile-bio">{{ profil.bio|default:"Pas encore de biographie. Cette personne écrit sur l'ingénierie et la technologie." }}</p>
+
+            <div class="social-links">
+                {% if profil.site_web %}
+                <a href="{{ profil.site_web }}" target="_blank" rel="noopener noreferrer">Site Web</a>
+                {% endif %}
+                {% if profil.linkedin_url %}
+                <a href="{{ profil.linkedin_url }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if request.user.is_authenticated and request.user == user_object %}
+            <a href="{% url 'profile_update' %}" class="cta edit-profile-btn">Éditer mon profil</a>
+        {% endif %}
+    </header>
+
+    <hr>
+
+    <section class="author-content-list">
+
+        <h2>Articles récents de l'auteur</h2>
+        {% if author_articles %}
+        <div class="card-list">
+            {% for article in author_articles %}
+            <article class="card">
+                <a href="{{ article.get_absolute_url }}" aria-label="Lire : {{ article.title }}">
+                    {% if article.featured_image %}
+                    <img src="{{ article.featured_image.url }}" alt="image d'illustration pour {{ article.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3>{{ article.title }}</h3>
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>Cet utilisateur n'a pas encore publié d'article.</p>
+        {% endif %}
+
+        <h2>Projets récents de l'auteur</h2>
+        {% if author_projets %}
+        <div class="card-list">
+            {% for projet in author_projets %}
+            <article class="card">
+                <a href="{{ projet.get_absolute_url }}" aria-label="Voir : {{ projet.title }}">
+                    {% if projet.main_image %}
+                    <img src="{{ projet.main_image.url }}" alt="image d'illustration pour {{ projet.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h3>{{ projet.title }}</h3>
+                    </div>
+                </a>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>Cet utilisateur n'a pas encore publié de projet.</p>
+        {% endif %}
+
+    </section>
+
+</section>
+{% endblock content %}

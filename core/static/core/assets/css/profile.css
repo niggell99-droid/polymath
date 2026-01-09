@@ -1,0 +1,278 @@
+:root {
+  --bg: #f4f6f9;
+  --card: #fff;
+  --accent: #0ea5e9;
+  --accent-2: #6b21a8;
+  --text: #0b1220;
+  --muted: #6b7280;
+  --radius: 12px;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.profile-header {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.profile-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #fff;
+  gap: 0.5rem;
+}
+
+.profile-logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.logout-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  padding: 0.6rem 1rem;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.profile-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.profile-card {
+  text-align: center;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  object-fit: cover;
+}
+
+.profile-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.edit-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.edit-btn:hover {
+  background: #0284c7;
+}
+
+.danger-btn {
+  background: #dc2626;
+  color: #fff;
+}
+
+.danger-btn:hover {
+  background: #b91c1c;
+}
+
+.profile-content {
+  margin-top: 2rem;
+}
+
+.profile-content h2 {
+  border-left: 4px solid var(--accent);
+  padding-left: 0.5rem;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.empty {
+  color: var(--muted);
+  text-align: center;
+}
+
+.toggle-theme {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.profile-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 3rem 0 1rem;
+}
+
+/* Mode sombre */
+body.dark-mode {
+  background: #071019;
+  color: #d7e6f0;
+}
+
+body.dark-mode .profile-card {
+  background: #0f1b2a;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+
+/* Avatar de profil */
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Animation d’apparition */
+.avatar-animate {
+  opacity: 0;
+  transform: scale(0.85);
+  animation: avatarFadeIn 0.6s ease forwards;
+}
+
+@keyframes avatarFadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+.profile-section {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.profile-card {
+  text-align: center;
+  background: var(--card);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+  width: 100%;
+}
+
+.avatar-controls {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.upload-btn {
+  position: relative;
+  overflow: hidden;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.25s ease;
+}
+
+.upload-btn:hover {
+  background: #3b82f6;
+}
+
+.upload-btn input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
+.reset-btn {
+  background: #f43f5e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.25s ease;
+}
+
+.reset-btn:hover {
+  background: #be123c;
+}
+
+.profile-container {
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode .profile-container {
+  background: #081018;
+  color: #d7e6f0;
+}
+
+.tab-btn {
+  position: relative;
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+

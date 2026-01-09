@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="page-header latest-articles">
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p>Discutez de projets, posez des questions techniques et partagez vos connaissances avec la communauté Polymath.</p>
+    </div>
+</section>
+
+<section class="forum-topics-list latest-articles">
+    <table class="forum-table">
+        <thead>
+            <tr>
+                <th>Thème</th>
+                <th class="stat-col">Sujets</th>
+                <th class="stat-col">Messages</th>
+                <th class="last-post-col">Dernier Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for topic in topics %}
+            <tr>
+                <td class="topic-info">
+                    <a href="{{ topic.get_absolute_url }}">
+                        <h2>{{ topic.name }}</h2>
+                    </a>
+                    <p class="topic-description">{{ topic.description }}</p>
+                </td>
+                <td class="stat-col">{{ topic.num_threads }}</td>
+                <td class="stat-col">{{ topic.num_posts }}</td>
+                <td class="last-post-col">
+                    {% if topic.threads.all %}
+                    <p>Dernière activité : <br><small>Hier à 14h30</small></p>
+                    {% else %}
+                    <p>Aucune activité</p>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Aucun thème n'a encore été configuré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock content %}
