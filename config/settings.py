@@ -218,6 +218,17 @@ CKEDITOR_5_CONFIGS = {
 CKEDITOR_5_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 
 
+# --- PARAMÈTRES SESSIONS ---
+SESSION_COOKIE_AGE = 1209600  # 2 semaines (en secondes)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False # La session persiste après fermeture (comportement "Se souvenir de moi")
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_HTTPONLY = True # Sécurité contre XSS
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True # Uniquement HTTPS en prod
+    CSRF_COOKIE_SECURE = True
+
 # --- PARAMÈTRES ALLAUTH ---
 
 SITE_ID = 1
@@ -225,14 +236,15 @@ SITE_ID = 1
 # URLs de redirection
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
-LOGIN_URL = 'login' # Pointing to our custom login view OR allauth's 'account_login'
+LOGIN_URL = 'login' 
 
-# Allauth Configuration
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-ACCOUNT_EMAIL_REQUIRED = True
+# Allauth Configuration (Updated for latest version)
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_EMAIL_VERIFICATION = "optional"
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
-ACCOUNT_USERNAME_REQUIRED = True
+# ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE is deprecated in favor of fields
+# ACCOUNT_USERNAME_REQUIRED is deprecated in favor of fields
+# ACCOUNT_EMAIL_REQUIRED is deprecated in favor of fields
+ACCOUNT_SIGNUP_FIELDS = ['email', 'username', 'password1'] # password1 = required password
 
 # Social Providers Configuration (Placeholders)
 SOCIALACCOUNT_PROVIDERS = {
