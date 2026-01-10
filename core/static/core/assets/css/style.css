@@ -293,6 +293,8 @@ select:focus {
 
 main#main {
 	margin-top: var(--header-height);
+	padding-top: 2rem;
+	/* Added top padding for better spacing */
 }
 
 /* Primary Nav */
