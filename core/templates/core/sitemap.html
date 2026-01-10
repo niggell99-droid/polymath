@@ -40,7 +40,7 @@
                 <ul style="list-style: none; padding: 0;">
                     {% for category in all_categories %}
                     <li style="margin-bottom: 0.75rem;">
-                        <a href="{% url 'blog:category_articles' slug=category.slug %}"
+                        <a href="{% url 'blog:category_detail' slug=category.slug %}"
                             style="color: var(--text); text-decoration: none;">→ {{ category.name }}</a>
                     </li>
                     {% endfor %}
