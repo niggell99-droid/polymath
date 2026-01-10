@@ -10,16 +10,12 @@
         {# 1. HERO SECTION : Grand article en pleine largeur avec image de fond #}
         {# ================================================================= #}
 
-        {% if hero_article and hero_article.featured_image %}
-        <section class="hero-featured" 
-                 aria-labelledby="hero-title"
-                 style="background-image: url('{{ hero_article.featured_image.url }}');">
-            <div class="hero-overlay"></div>
-            <div class="hero-inner">
-                
+        {% if hero_article %}
+        <section class="hero-featured container" aria-labelledby="hero-title">
+            <div class="hero-content">
                 {# Afficher la catégorie principale comme un badge #}
-                {% if hero_article.categories.first %}
-                <span class="category-badge">{{ hero_article.categories.first.name }}</span>
+                {% if hero_article.category %}
+                    <span class="category-badge">{{ hero_article.category.name }}</span>
                 {% endif %}
 
                 <h1 id="hero-title"><a href="{{ hero_article.get_absolute_url }}">{{ hero_article.title }}</a></h1>
@@ -30,6 +26,20 @@
                     <small>Par <strong>{{ hero_article.author.get_full_name|default:hero_article.author.username }}</strong> — {{ hero_article.publication_date|date:"j F Y" }}</small>
                 </div>
                 
+                <div class="hero-cta-wrapper">
+                    <a href="{{ hero_article.get_absolute_url }}" class="cta">Lire l'article</a>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                {% if hero_article.featured_image %}
+                <a href="{{ hero_article.get_absolute_url }}">
+                    <img src="{{ hero_article.featured_image.url }}" alt="image d'illustration pour l'article : {{ hero_article.title }}">
+                </a>
+                {% else %}
+                    <!-- Placeholder si pas d'image -->
+                    <div class="hero-image-placeholder"></div>
+                {% endif %}
             </div>
         </section>
         {% else %}
@@ -124,7 +134,7 @@
                 <div class="category-list-grid">
                     {% for category in main_categories %}
                     <div class="category-card-item">
-                        <a href="{% url 'category_detail' slug=category.slug %}">
+                        <a href="{% url 'blog:category_detail' slug=category.slug %}">
                             <h3>{{ category.name }}</h3>
                             <p>{{ category.description|default:"Découvrez nos articles et projets sur ce sujet passionnant." }}</p>
                         </a>
@@ -157,7 +167,7 @@
                     {% endfor %}
                 </div>
                 <div class="text-center view-all-link">
-                    <a href="{% url 'projet_list' %}" class="cta small-cta">Voir tous les projets</a> 
+                    <a href="{% url 'projets:projet_list' %}" class="cta small-cta">Voir tous les projets</a> 
                 </div>
             </section>
             {% endif %}
@@ -170,7 +180,7 @@
     {# ================================================================= #}
 
     <section class="newsletter-cta-full">
-        <div class="container cta-inner">
+        <div class="cta-inner">
             <h2>Ne manquez aucune innovation !</h2>
             <p>Recevez nos meilleurs articles et tutoriels directement dans votre boîte mail.</p>
             <form action="#" method="post" class="newsletter-form-wide">

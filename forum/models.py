@@ -16,7 +16,7 @@ class Topic(models.Model):
 
     def get_absolute_url(self):
         # URL de la liste des sujets d'un thème
-        return reverse('topic_detail', kwargs={'slug': self.slug})
+        return reverse('forum:topic_detail', kwargs={'slug': self.slug})
 
 
 # 2. Sujet (Thread) : Le fil de discussion initié par un utilisateur

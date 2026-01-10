@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Topic, Thread, Post
 from django.db import models
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from blog.models import Category
 
 # Vue 1 : Liste de tous les Thèmes (Forum Home)
 def topic_list(request):
@@ -14,6 +16,7 @@ def topic_list(request):
     context = {
         'topics': topics,
         'title': 'Forum Communautaire',
+        'all_categories': Category.objects.all(),
     }
     return render(request, 'forum/topic_list.html', context)
 
@@ -23,14 +26,25 @@ def topic_detail(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
 
     # Récupère tous les sujets dans ce thème
-    threads = topic.threads.all().annotate(
+    thread_qs = topic.threads.all().annotate(
         # Annote chaque sujet avec le nombre total de messages
         num_posts=models.Count('posts', distinct=True)
-    )
+    ).order_by('-is_pinned', '-updated_at')
+
+    # Pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(thread_qs, 10)
+    try:
+        threads = paginator.page(page)
+    except PageNotAnInteger:
+        threads = paginator.page(1)
+    except EmptyPage:
+        threads = paginator.page(paginator.num_pages)
 
     context = {
         'topic': topic,
         'threads': threads,
         'title': f'Forum : {topic.name}',
+        'all_categories': Category.objects.all(),
     }
     return render(request, 'forum/topic_detail.html', context)

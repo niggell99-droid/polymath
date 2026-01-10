@@ -1,42 +1,45 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="Polymath — tutoriels, projets et analyses sur l'ingénierie, la robotique, la mécatronique et l'IA.">
-    <!-- Open Graph / Social -->
+    <meta name="description"
+        content="Polymath — tutoriels, projets et analyses sur l'ingénierie, la robotique, la mécatronique et l'IA.">
     <meta property="og:title" content="Polymath — Média & Ingénierie">
-    <meta property="og:description" content="Tutoriels, projets et analyses sur l'ingénierie, la robotique, la mécatronique et l'IA.">
+    <meta property="og:description"
+        content="Tutoriels, projets et analyses sur l'ingénierie, la robotique, la mécatronique et l'IA.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="./polymath_og.png">
+    <meta property="og:image" content="{% static 'core/assets/img/polymath_og.png' %}">
     <meta property="og:url" content="https://ton-site.example/">
     <meta name="twitter:card" content="summary_large_image">
-    <!-- Prefers color-scheme hint (utile pour JS / progressive enhancement) -->
     <meta name="color-scheme" content="light dark">
-    <title>Polymath — Média & Ingénierie</title>
+    <title>
+        {% block title %}Polymath — Média & Ingénierie{% endblock title %}
+    </title>
 
-    <!-- Favicon (remplacer par le fichier .ico / .png optimisé) -->
-    <!-- <link rel="icon" href="favicon.png" type="image/png"> -->
+    <link rel="stylesheet" href="{% static 'core/assets/css/style.css' %}?v=12">
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{% static 'core/assets/css/style.css' %}">
+    {% block extra_css %}
+    {% endblock extra_css %}
 </head>
+
 <body>
-    <!-- Skip link -->
     <a class="skip-link" href="#main">Aller au contenu</a>
 
     <header role="banner" class="site-header">
         <nav role="navigation" aria-label="Navigation principale" class="nav">
             <div class="nav-left">
-                <a class="logo" href="index.html" aria-label="Accueil Polymath">
+                <a class="logo" href="{% url 'home' %}" aria-label="Accueil Polymath">
                     <img src="{% static 'core/assets/img/logo/polymath_1.png' %}" alt="Logo Polymath" class="logo-img">
                     <span class="logo-text">Polymath</span>
                 </a>
             </div>
 
             <div class="nav-center">
-                <button type="button" class="hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="primary-navigation">
+                <button type="button" class="hamburger" aria-label="Ouvrir le menu" aria-expanded="false"
+                    aria-controls="primary-navigation">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -45,70 +48,102 @@
                 <div id="primary-navigation" class="navlinks" data-visible="false">
                     <ul>
                         <li><a href="{% url 'home' %}">Accueil</a></li>
-                        <li><a href="#">Actu</a></li>
+                        <li><a href="{% url 'forum:topic_list' %}?tab=actu">Actu</a></li>
                         <li><a href="{% url 'blog:article_list' %}">Articles</a></li>
-                        <li><a href="{% url 'projet_list' %}">Projets</a></li>
-                        <li><a href="#">Live</a></li>
-                        <li><a href="{% url 'forum_home' %}">Forum</a></li>
+                        <li><a href="{% url 'projets:projet_list' %}">Projets</a></li>
+                        <li><a href="{% url 'forum:topic_list' %}?tab=live">Live</a></li>
+                        <li><a href="{% url 'forum:topic_list' %}">Forum</a></li>
                     </ul>
                 </div>
             </div>
 
+            <!-- Overlay pour le menu mobile -->
+            <div class="nav-overlay"></div>
+
             <div class="nav-right">
                 <div class="search">
-                    <input id="search" class="search-input" type="search" placeholder="Rechercher un article...">
-                    <button type="submit" class="icon-btn" aria-label="Rechercher" id="search-inline-btn" title="Rechercher">
-                        <!-- petit SVG loupe -->
-                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                            <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
-                        </svg>
-                    </button>
+                    <form action="{% url 'search' %}" method="get" style="display: flex; align-items: center;">
+                        <input id="search" name="q" class="search-input" type="search"
+                            placeholder="Rechercher un article...">
+                        <button type="submit" class="icon-btn" aria-label="Rechercher" id="search-inline-btn"
+                            title="Rechercher">
+                            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none" />
+                            </svg>
+                        </button>
+                    </form>
                 </div>
 
-                <button type="button" class="search-toggle icon-btn" aria-label="Ouvrir la recherche plein écran" aria-expanded="false">
+                <button type="button" class="search-toggle icon-btn" aria-label="Ouvrir la recherche plein écran"
+                    aria-expanded="false">
                     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" fill="none" />
+                        <circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="2" fill="none" />
                     </svg>
                 </button>
 
-                <div class="mode-toggle" role="button" tabindex="0" aria-label="Basculer mode sombre" title="Mode sombre" aria-pressed="false">
+                <div class="mode-toggle" role="button" tabindex="0" aria-label="Basculer mode sombre"
+                    title="Mode sombre" aria-pressed="false">
                     <img class="moon-logo" src="{% static 'core/assets/icons/moon.svg' %}" alt="image de la lune">
                     <img class="sun-logo" src="{% static 'core/assets/icons/sun.svg' %}" alt="image du soleil">
                 </div>
 
                 {% if user.is_authenticated %}
-                    <a href="{% url 'profil_detail' user.pk %}" class="icon-btn" aria-label="Mon compte">
-                        {% comment %} <img src="{% static 'core/assets/icons/user.svg' %}" alt="Compte"> {% endcomment %}
-                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zM3 21v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    </a>
+                <a href="{% url 'profil_detail' user.pk %}" class="profile-link" aria-label="Mon profil">
+                    <div class="profile-picture-container">
+                        {# Supposons que user.profile.image contienne l'URL de la photo de profil #}
+                        {# Si user.profile.image est vide, utilisez une image par défaut #}
+                        {% if user.profil.avatar %}
+                        <img src="{{ user.profil.avatar.url }}" alt="Photo de profil de {{ user.username }}"
+                            class="profile-picture">
+                        {% else %}
+                        <img src="{% static 'core/assets/icons/default_user.svg' %}" alt="Photo de profil par défaut"
+                            class="profile-picture default">
+                        {% endif %}
+                    </div>
+                </a>
                 {% else %}
-                    <a href="{% url 'register' %}" class="cta cta-register">S'inscrire</a>
-
-                    <a href="{% url 'login' %}" class="cta cta-login">Se connecter</a>
-                {% endif %}
-
-                {% comment %} <a class="user-btn icon-btn" href="{% if user.is_authenticated %}{% url 'profil_detail' user.pk %}{% else %}{% url 'login' %}{% endif %}" aria-label="Mon compte">
+                {# Icone SVG qui mène à la page de connexion #}
+                <a href="{% url 'signup' %}" class="icon-btn login-icon-btn" aria-label="Se connecter">
                     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zM3 21v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5zM3 21v-1a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v1"
+                            stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round" />
                     </svg>
-                </a> {% endcomment %}
+                </a>
+                {% endif %}
+        </nav>
+        {% block secondary_nav %}
+        {% if all_categories %}
+        <nav class="secondary-nav">
+            <div class="container">
+                <ul class="category-list">
+                    <li><a href="{% url 'blog:article_list' %}" class="active">Toutes</a></li>
+                    {% for category in all_categories %}
+                    <li><a href="{% url 'blog:category_articles' slug=category.slug %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+                <a href="#" class="cta cta-subscribe-desktop">S'abonner</a>
             </div>
         </nav>
+        {% endif %}
+        {% endblock secondary_nav %}
+
         <div class="scroll-progress"></div>
     </header>
 
-    <!-- Search overlay -->
     <div id="search-overlay" class="search-overlay" aria-hidden="true" role="dialog" aria-label="Recherche pleine page">
         <div class="search-overlay-inner">
             <button type="button" id="close-search-overlay" class="icon-btn close-btn" aria-label="Fermer la recherche">
                 ✕
             </button>
-            <form class="search-form" role="search" aria-label="Recherche sur le site">
-                <input id="search-full" type="search" placeholder="Rechercher un article, un projet..." autocomplete="off">
+            <form action="{% url 'search' %}" method="get" class="search-form" role="search"
+                aria-label="Recherche sur le site">
+                <input id="search-full" name="q" type="search" placeholder="Rechercher un article, un projet..."
+                    autocomplete="off">
                 <button type="submit" class="cta">Rechercher</button>
             </form>
         </div>
@@ -119,11 +154,13 @@
         {% endblock content %}
     </main>
 
+    {% block footer %}
     <footer role="contentinfo" class="site-footer">
         <div class="footer-grid">
             <div class="footer-about">
                 <div class="footer-bottom-logo">
-                    <img src="{% static 'core/assets/img/logo/polymath_8.png' %}" alt="Logo Polymath" class="footer-logo">
+                    <img src="{% static 'core/assets/img/logo/polymath_8.png' %}" alt="Logo Polymath"
+                        class="footer-logo">
                     <p>Votre source d'information sur les dernières innovations en ingénierie.</p>
                 </div>
                 <div class="socials">
@@ -140,89 +177,100 @@
             </div>
 
             <nav class="footer-nav" aria-label="Navigation du pied de page">
-                <h4>Navigation</h4>
+                <h4>Catégories</h4>
                 <ul>
-                    <li><a href="#">A propos</a></li>
-                    <li><a href="#">Nos services</a></li>
-                    <li><a href="#">A propos</a></li>
-                    <li><a href="#">Nos services</a></li>
-                    <li><a href="#">Notre équipe</a></li>
-                    <li><a href="#">Aérospatial</a></li>
-                    <li><a href="#">Mécatronique</a></li>
-                    <li><a href="#">Robotique</a></li>
-                    <li><a href="#">Digitales solutions</a></li>
-                    <li><a href="#">IT | Adm syst & network</a></li>
-                    <li><a href="#">Intelligence artificielle</a></li>
-                    <li><a href="#">Projets</a></li>
-                    <li><a href="#">Archives</a></li>
+                    <li><a href="{% url 'blog:article_list' %}">Tous les articles</a></li>
+                    {% for category in all_categories|slice:":6" %}
+                    <li><a href="{% url 'blog:category_detail' slug=category.slug %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                    <li><a href="{% url 'projets:projet_list' %}">Projets</a></li>
+                    <li><a href="{% url 'forum:topic_list' %}">Forum</a></li>
                 </ul>
             </nav>
 
             <div class="footer-legal">
                 <h4>Légal & Contact</h4>
                 <ul>
-                    <li><a href="#">Mentions légales</a></li>
-                    <li><a href="#">Confidentialité</a></li>
-                    <li><a href="#">Conditions d'utilisation</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Plan du site</a></li>
+                    <li><a href="{% url 'legal' %}">Mentions légales</a></li>
+                    <li><a href="{% url 'privacy' %}">Confidentialité</a></li>
+                    <li><a href="{% url 'terms' %}">Conditions d'utilisation</a></li>
+                    <li><a href="{% url 'contact' %}">Contact</a></li>
+                    <li><a href="{% url 'sitemap' %}">Plan du site</a></li>
                 </ul>
             </div>
 
             <aside class="footer-cta" aria-labelledby="newsletter-title">
                 <h4 id="newsletter-title">Restez informé</h4>
-                <p>Abonnez-vous à la newsletter.</p>
-                <form action="#" class="newsletter-form" method="post" novalidate>
+                <p>Abonnez-vous à la newsletter pour ne rien rater.</p>
+                <form action="{% url 'newsletter_subscribe' %}" class="newsletter-form" method="post" novalidate>
+                    {% csrf_token %}
                     <label for="newsletter-email" class="visually-hidden">Adresse email</label>
-                    <input id="newsletter-email" type="email" placeholder="Votre email" required>
-                    <button class="cta" type="submit">S'abonner</button>
+                    <input id="newsletter-email" name="email" type="email" placeholder="Votre email" required
+                        aria-label="Adresse email">
+                    <button class="cta cta-newsletter" type="submit">S'abonner</button>
                 </form>
             </aside>
         </div>
-         <div class="footer-bottom">
-                <p>&copy; 2025 Polymath — Développé par GraviTech Software</p>
-        </div>    
+        <div class="footer-bottom">
+            <p>&copy; 2025 Polymath — Développé par GraviTech Software</p>
+        </div>    
     </footer>
+    {% endblock footer %}
 
-    <!-- Menu latéral mobile -->
     <aside class="mobile-menu" aria-hidden="true">
         <div class="mobile-menu-inner">
             <button type="button" class="close-mobile-menu" aria-label="Fermer le menu">
                 <img src="{% static 'core/assets/icons/close.svg' %}" alt="Fermer">
             </button>
             <div class="mobile-menu-header">
-                <img src="{% static 'core/assets/img/logo/polymath_logo_light.svg' %}" alt="Polymath" class="mobile-menu-logo">
+                <img src="{% static 'core/assets/img/logo/polymath_logo_light.svg' %}" alt="Polymath"
+                    class="mobile-menu-logo">
             </div>
 
             <nav class="mobile-menu-nav">
                 <ul>
-                    <li><a href="index.html">Accueil</a></li>
-                    <li><a href="#">Articles</a></li>
-                    <li><a href="#">Projets</a></li>
-                    <li><a href="#">Newsletter</a></li>
+                    <li><a href="{% url 'home' %}">Accueil</a></li>
+                    <li><a href="{% url 'forum:topic_list' %}?tab=actu" style="color: var(--accent);">Actualités</a>
+                    </li>
+                    <li><a href="{% url 'forum:topic_list' %}?tab=live" style="color: #ef4444;">Live Stream</a></li>
+                    <li><a href="{% url 'blog:article_list' %}">Articles</a></li>
+                    <li><a href="{% url 'projets:projet_list' %}">Projets</a></li>
+                    <li><a href="{% url 'forum:topic_list' %}">Forum</a></li>
                     <li class="divider"></li>
 
-                    <!-- Rubriques visibles uniquement sur mobile -->
-                    <li class="mobile-only"><a href="#">Podcasts</a></li>
-                    <li class="mobile-only"><a href="#">Vidéos</a></li>
-                    <li class="mobile-only"><a href="#">Innovations</a></li>
-                    <li class="mobile-only"><a href="#">Tech durable</a></li>
+                    {% if all_categories %}
+                    <li class="mobile-only menu-separator">
+                        <h4
+                            style="font-size: 0.9rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; margin: 1rem 0 0.5rem 0;">
+                            Catégories</h4>
+                    </li>
+                    {% for category in all_categories %}
+                    <li class="mobile-only">
+                        <a href="{% url 'blog:category_articles' slug=category.slug %}"
+                            style="display: flex; justify-content: space-between; align-items: center;">
+                            {{ category.name }}
+                            <span style="opacity: 0.3;">→</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                    <li class="divider mobile-only"></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>
     </aside>
 
-    <!-- Overlay sombre -->
     <div class="mobile-menu-overlay"></div>
 
     <nav class="mobile-bottom-nav">
-        <a href="index.html" class="nav-item" aria-label="Accueil">
+        <a href="{% url 'home' %}" class="nav-item" aria-label="Accueil">
             <img src="{% static 'core/assets/icons/home.svg' %}" alt="">
         </a>
         <button type="button" class="nav-item" aria-label="Rechercher">
             <img src="{% static 'core/assets/icons/search.svg' %}" alt="">
         </button>
-        <a href="#" class="nav-item" aria-label="Mon compte">
+        <a href="{% if user.is_authenticated %}{% url 'profil_detail' user.pk %}{% else %}{% url 'signup' %}{% endif %}"
+            class="nav-item" aria-label="Mon compte">
             <img src="{% static 'core/assets/icons/user.svg' %}" alt="">
         </a>
         <button type="button" class="nav-item hamburger-mini" aria-label="Menu mobile">
@@ -231,5 +279,9 @@
     </nav>
 
     <script src="{% static 'core/assets/js/script.js' %}" defer></script>
+
+    {% block extra_js %}
+    {% endblock extra_js %}
 </body>
+
 </html>

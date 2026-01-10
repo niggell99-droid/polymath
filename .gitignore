@@ -37,3 +37,5 @@ config/settings_local.py
 # Fichiers médias téléchargés par les utilisateurs (images, vidéos)
 # Ceux-ci doivent être stockés sur un service de stockage externe en production
 media/
+staticfiles/
+.env

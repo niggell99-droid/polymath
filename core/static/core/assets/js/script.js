@@ -59,7 +59,7 @@
   function toggleTheme() {
     const isDark = !body.classList.contains("dark-mode");
     applyTheme(isDark);
-    try { localStorage.setItem(DARK_KEY, JSON.stringify(isDark)); } catch(e) {}
+    try { localStorage.setItem(DARK_KEY, JSON.stringify(isDark)); } catch (e) { }
   }
 
   // ===== Search overlay (version animée et optimisée) =====
@@ -135,12 +135,14 @@
     const mobileMenuOverlay = $(".mobile-menu-overlay");
     const hamburgerMini = $(".hamburger-mini");
     const closeMobileMenuBtn = $(".close-mobile-menu");
+    const navOverlay = $(".nav-overlay");
 
     function openDesktopNav() {
       if (!navlinks || !hamburger) return;
       navlinks.classList.add("open");
       hamburger.classList.add("open");
       hamburger.setAttribute("aria-expanded", "true");
+      if (navOverlay) navOverlay.classList.add("active");
       setNoScroll(true);
       if (mobileMenu?.classList.contains("open")) closeMobileMenu();
     }
@@ -150,6 +152,7 @@
       navlinks.classList.remove("open");
       hamburger.classList.remove("open");
       hamburger.setAttribute("aria-expanded", "false");
+      if (navOverlay) navOverlay.classList.remove("active");
       setNoScroll(false);
     }
 
@@ -203,6 +206,7 @@
     // Fermetures
     if (closeMobileMenuBtn) closeMobileMenuBtn.addEventListener("click", closeMobileMenu);
     if (mobileMenuOverlay) mobileMenuOverlay.addEventListener("click", closeMobileMenu);
+    if (navOverlay) navOverlay.addEventListener("click", closeDesktopNav);
 
     // Close on Escape
     document.addEventListener("keydown", (e) => {

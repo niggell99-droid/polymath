@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-page-header">
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p>Protection de vos données personnelles</p>
+    </div>
+</section>
+
+<section class="latest-articles" style="padding: 4rem 0;">
+    <div class="container" style="max-width: 900px;">
+        <div
+            style="background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 3rem; border: 1px solid rgba(255,255,255,0.05);">
+
+            <h2 style="margin-top: 2rem;">Collecte des données</h2>
+            <p>Nous collectons uniquement les données nécessaires au fonctionnement du site :</p>
+            <ul style="margin-left: 2rem; line-height: 1.8;">
+                <li>Adresse email pour la newsletter (avec votre consentement)</li>
+                <li>Informations de compte si vous vous inscrivez</li>
+                <li>Données de navigation (cookies techniques)</li>
+            </ul>
+
+            <h2 style="margin-top: 2rem;">Utilisation des données</h2>
+            <p>Vos données sont utilisées exclusivement pour :</p>
+            <ul style="margin-left: 2rem; line-height: 1.8;">
+                <li>L'envoi de la newsletter (si vous y êtes abonné)</li>
+                <li>La gestion de votre compte utilisateur</li>
+                <li>L'amélioration de nos services</li>
+            </ul>
+
+            <h2 style="margin-top: 2rem;">Vos droits</h2>
+            <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression et d'opposition
+                concernant vos données personnelles. Pour exercer ces droits, contactez-nous via notre
+                <a href="{% url 'contact' %}" style="color: var(--accent);">page de contact</a>.
+            </p>
+
+            <h2 style="margin-top: 2rem;">Cookies</h2>
+            <p>Nous utilisons des cookies techniques nécessaires au fonctionnement du site.
+                Aucun cookie publicitaire ou de tracking n'est utilisé.</p>
+
+            <h2 style="margin-top: 2rem;">Sécurité</h2>
+            <p>Nous mettons en œuvre toutes les mesures techniques et organisationnelles appropriées
+                pour protéger vos données contre tout accès non autorisé.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

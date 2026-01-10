@@ -1,47 +1,71 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profil # Import du modèle Profil
+from .models import Profil
 
-# Nous étendons le formulaire d'inscription standard de Django
-class CustomUserCreationForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        model = User
-        # Champs que l'utilisateur doit remplir lors de l'inscription
-        fields = UserCreationForm.Meta.fields + ('first_name', 'last_name', 'email',)
+class CustomLoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom d\'utilisateur'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mot de passe'}))
 
-    def clean_email(self):
-        # Assure que l'email est unique pour un usage professionnel
-        email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Cette adresse e-mail est déjà utilisée.")
-        return email
-    
-# 1. Formulaire pour les champs du modèle User (Nom, Prénom, Email)
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField() # On s'assure que l'email est géré comme tel
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = None
+
+class CustomSignupForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': 'Prénom'}))
+    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'placeholder': 'Nom'}))
+    email = forms.EmailField(max_length=254, required=True, help_text='Un email valide est requis pour la validation.', widget=forms.EmailInput(attrs={'placeholder': 'Adresse Email'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}))
+    password_confirm = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirmer le mot de passe'}))
 
     class Meta:
         model = User
-        # Champs à rendre éditables par l'utilisateur
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ('username', 'first_name', 'last_name', 'email', 'password')
+        help_texts = {
+            'username': None,
+        }
 
-    def clean_username(self):
-        # Optionnel : Ajouter ici une validation personnalisée du nom d'utilisateur
-        username = self.cleaned_data['username']
-        # Exemple de vérification si le nom d'utilisateur est déjà pris
-        if User.objects.exclude(pk=self.instance.pk).filter(username=username).exists():
-            raise forms.ValidationError("Ce nom d'utilisateur est déjà utilisé par un autre compte.")
-        return username
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password_confirm = cleaned_data.get("password_confirm")
 
-# 2. Formulaire pour les champs du modèle Profil (Bio, Avatar, Liens Sociaux)
+        if password and password_confirm and password != password_confirm:
+            self.add_error('password_confirm', "Les mots de passe ne correspondent pas.")
+        
+        return cleaned_data
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
+
+# Alias for compatibility with views.py
+CustomUserCreationForm = CustomSignupForm
+
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+             field.widget.attrs['class'] = 'form-control'
+
+
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profil
-        # Champs à rendre éditables
         fields = ['avatar', 'bio', 'site_web', 'linkedin_url']
 
-        # Aide visuelle pour le champ bio
-        widgets = {
-            'bio': forms.Textarea(attrs={'rows': 4}),
-        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'

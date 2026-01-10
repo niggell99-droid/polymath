@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Inscription - Polymath{% endblock title %}
+{% block title %}Connexion - Polymath{% endblock title %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'core/assets/css/auth.css' %}?v=1">
@@ -13,8 +13,8 @@
     <div class="auth-card">
         <div class="auth-header">
             <img src="{% static 'core/assets/img/logo/polymath_1.png' %}" alt="Polymath Logo" class="auth-logo">
-            <h2>Inscription</h2>
-            <p>Rejoignez la communauté des ingénieurs Polymath.</p>
+            <h2>Bon retour</h2>
+            <p>Heureux de vous revoir. Connectez-vous pour continuer.</p>
         </div>
 
         <form method="post" class="auth-form">
@@ -39,18 +39,42 @@
                     }}</small>
                 {% endfor %}
                 {% endif %}
-                {% if field.help_text %}
-                <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem; display: block; margin-top: 0.2rem;">{{
-                    field.help_text|safe }}</small>
-                {% endif %}
             </div>
             {% endfor %}
 
-            <button type="submit" class="auth-cta">Créer mon compte</button>
+            <button type="submit" class="auth-cta">Se connecter</button>
+
+            {% if next %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
         </form>
 
         <div class="auth-footer">
-            <p>Déjà membre ? <a href="{% url 'login' %}">Se connecter</a></p>
+            <p>Pas encore de compte ? <a href="{% url 'register' %}">Créer un compte</a></p>
+        </div>
+
+        {# Social Login Section (Requires django-allauth) #}
+        {% load socialaccount %}
+        <div class="social-login-separator">
+            <span>Ou continuer avec</span>
+        </div>
+
+        <div class="social-login-buttons">
+            <!-- Note: Configure SocialApps in Admin to use provider_login_url -->
+            <a href="#" class="social-btn google" title="Nécessite configuration Admin">
+                Google
+            </a>
+            <a href="#" class="social-btn facebook" title="Nécessite configuration Admin">
+                Facebook
+            </a>
+            <a href="#" class="social-btn apple" title="Nécessite configuration Admin">
+                Apple
+            </a>
+            {% comment %}
+            Original Tags (Uncomment after DB Config):
+            <a href="{% provider_login_url 'google' %}" ...>Google</a>
+            <a href="{% provider_login_url 'facebook' method='oauth2' %}" ...>Facebook</a>
+            {% endcomment %}
         </div>
     </div>
 </div>

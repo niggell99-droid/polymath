@@ -2,48 +2,164 @@
 {% load static %}
 
 {% block content %}
-<section class="page-header latest-articles">
-    <div class="container">
-        <h1>{{ title }}</h1>
-        <p>Discutez de projets, posez des questions techniques et partagez vos connaissances avec la communauté Polymath.</p>
-    </div>
-</section>
+<link rel="stylesheet" href="{% static 'core/assets/css/forum.css' %}?v=1">
 
-<section class="forum-topics-list latest-articles">
-    <table class="forum-table">
-        <thead>
-            <tr>
-                <th>Thème</th>
-                <th class="stat-col">Sujets</th>
-                <th class="stat-col">Messages</th>
-                <th class="last-post-col">Dernier Message</th>
-            </tr>
-        </thead>
-        <tbody>
+<!-- Community Header with Tabs -->
+<header class="community-header">
+    <div class="container">
+        <h1>Communauté Polymath</h1>
+        <p>Espace d'échange, d'actualités et de direct. Rejoignez les ingénieurs qui construisent le futur.</p>
+
+        <div class="community-tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'tab-forum')">Forum</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-actu')">Actualités</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-live')">Live Stream</button>
+        </div>
+    </div>
+</header>
+
+<div class="container" style="min-height: 60vh;">
+
+    <!-- TAB 1: FORUM TOPICS -->
+    <div id="tab-forum" class="tab-content">
+        <div class="forum-grid">
             {% for topic in topics %}
-            <tr>
-                <td class="topic-info">
-                    <a href="{{ topic.get_absolute_url }}">
-                        <h2>{{ topic.name }}</h2>
-                    </a>
-                    <p class="topic-description">{{ topic.description }}</p>
-                </td>
-                <td class="stat-col">{{ topic.num_threads }}</td>
-                <td class="stat-col">{{ topic.num_posts }}</td>
-                <td class="last-post-col">
-                    {% if topic.threads.all %}
-                    <p>Dernière activité : <br><small>Hier à 14h30</small></p>
-                    {% else %}
-                    <p>Aucune activité</p>
-                    {% endif %}
-                </td>
-            </tr>
+            <a href="{{ topic.get_absolute_url }}" class="topic-card">
+                <div class="topic-icon-placeholder">
+                    <span>#</span>
+                </div>
+                <h2>{{ topic.name }}</h2>
+                <p class="description">{{ topic.description|truncatechars:100 }}</p>
+                <div class="topic-stats">
+                    <span><strong>{{ topic.num_threads }}</strong> sujets</span>
+                    <span><strong>{{ topic.num_posts }}</strong> messages</span>
+                </div>
+            </a>
             {% empty %}
-            <tr>
-                <td colspan="4">Aucun thème n'a encore été configuré.</td>
-            </tr>
+            <div style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 4rem;">
+                <p>Aucun thème configuré pour le moment.</p>
+            </div>
             {% endfor %}
-        </tbody>
-    </table>
-</section>
+        </div>
+    </div>
+
+    <!-- TAB 2: ACTU (MOCK) -->
+    <div id="tab-actu" class="tab-content" style="display: none;">
+        <div class="actu-grid">
+            <div class="feed-main">
+                <!-- Mock Article 1 -->
+                <div class="news-card">
+                    <div class="news-image" style="background: linear-gradient(45deg, #3b82f6, #8b5cf6);"></div>
+                    <div class="news-content">
+                        <span class="news-tag">Technologie</span>
+                        <h3>Les avancées majeures de l'IA en 2025</h3>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Un résumé des breakthroughs techniques de
+                            cette année, de GPT-5 aux nouveaux modèles de vision.</p>
+                        <a href="#" class="cta small-cta">Lire la suite</a>
+                    </div>
+                </div>
+                <!-- Mock Article 2 -->
+                <div class="news-card">
+                    <div class="news-image" style="background: linear-gradient(45deg, #10b981, #3b82f6);"></div>
+                    <div class="news-content">
+                        <span class="news-tag">Événement</span>
+                        <h3>Hackathon Polymath : Les résultats</h3>
+                        <p style="color: var(--muted); margin-bottom: 1rem;">Bravo à l'équipe "Neural Net" pour leur
+                            victoire écrasante avec leur projet de drone autonome.</p>
+                        <a href="#" class="cta small-cta">Voir les projets</a>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="trending-sidebar">
+                <h4 style="margin-bottom: 1.5rem; color: #fff;">Tendances</h4>
+                <div class="trending-item">
+                    <small style="color: var(--accent);">#Robotique</small>
+                    <p style="margin:0; font-size: 0.9rem;">Boston Dynamics dévoile Atlas 2.0</p>
+                </div>
+                <div class="trending-item">
+                    <small style="color: var(--accent);">#SpaceX</small>
+                    <p style="margin:0; font-size: 0.9rem;">Starship : Succès du vol orbital</p>
+                </div>
+                <div class="trending-item">
+                    <small style="color: var(--accent);">#Python</small>
+                    <p style="margin:0; font-size: 0.9rem;">Django 6.0 est disponible</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- TAB 3: LIVE (MOCK) -->
+    <div id="tab-live" class="tab-content" style="display: none;">
+        <div class="live-player">
+            <div class="offline-state">
+                <div class="offline-icon">📡</div>
+                <h2>Le stream est hors ligne</h2>
+                <p>Prochain live : <strong>Mardi 20h00 - Q&A Technique</strong></p>
+                <button class="cta secondary" style="margin-top: 1rem;">M'avertir</button>
+            </div>
+            <!-- Badge Live (Hidden when offline) -->
+            <!-- <span style="position: absolute; top: 1rem; left: 1rem; background: #ef4444; color: white; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: bold; font-size: 0.8rem;">EN DIRECT</span> -->
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+            <div>
+                <h3>Derniers replays</h3>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; overflow-x: auto; padding-bottom: 1rem;">
+                    <div
+                        style="min-width: 250px; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem;">
+                        <div style="height: 140px; background: #334155; border-radius: 6px; margin-bottom: 0.5rem;">
+                        </div>
+                        <h4 style="font-size: 1rem;">Intro à Rust</h4>
+                        <small style="color: var(--muted);">Il y a 2 jours</small>
+                    </div>
+                    <div
+                        style="min-width: 250px; background: rgba(255,255,255,0.05); border-radius: 8px; padding: 1rem;">
+                        <div style="height: 140px; background: #334155; border-radius: 6px; margin-bottom: 0.5rem;">
+                        </div>
+                        <h4 style="font-size: 1rem;">Débat IA vs Dev</h4>
+                        <small style="color: var(--muted);">Il y a 1 semaine</small>
+                    </div>
+                </div>
+            </div>
+            <div class="live-chat-placeholder">
+                <p>Le tchat est désactivé.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+
+        // Hide all tab content
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Remove active class from all buttons
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tab = urlParams.get('tab');
+
+        if (tab === 'actu') {
+            document.querySelector('.tab-btn[onclick*="tab-actu"]').click();
+        } else if (tab === 'live') {
+            document.querySelector('.tab-btn[onclick*="tab-live"]').click();
+        }
+    });
+</script>
 {% endblock content %}

@@ -1,0 +1,35 @@
+@require_POST
+def add_comment(request, content_type_id, object_id):
+    """
+    Generic view to add a comment to any object (Article, Project, etc.)
+    """
+    if not request.user.is_authenticated:
+        messages.error(request, "Vous devez être connecté pour commenter.")
+        # Redirect to login page with next parameter? 
+        # For now, just redirect back or to login
+        return redirect('login')
+
+    try:
+        content_type = ContentType.objects.get(id=content_type_id)
+        # Verify that the object exists
+        content_type.get_object_for_this_type(pk=object_id)
+    except (ContentType.DoesNotExist, ObjectDoesNotExist):
+        messages.error(request, "Le contenu que vous essayez de commenter n'existe pas.")
+        return redirect('home')
+
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.user = request.user
+        comment.content_type = content_type
+        comment.object_id = object_id
+        comment.save()
+        messages.success(request, "Votre commentaire a été ajouté !")
+    else:
+        messages.error(request, "Erreur lors de l'ajout du commentaire. Veuillez vérifier votre saisie.")
+
+    # Redirect back to the content object's page
+    next_url = request.META.get('HTTP_REFERER')
+    if next_url:
+        return redirect(next_url)
+    return redirect('home')

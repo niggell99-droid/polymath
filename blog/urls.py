@@ -9,5 +9,7 @@ urlpatterns = [
 
     # URL de détail de l'article : /articles/mon-slug-article/
     path('categorie/<slug:slug>/', views.category_detail, name='category_detail'),
+
+    path('categories/<slug:slug>/', views.CategoryArticleListView.as_view(), name='category_articles'),
     path('<slug:slug>/', views.article_detail, name='article_detail'),  
 ]

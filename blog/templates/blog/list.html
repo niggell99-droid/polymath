@@ -1,34 +1,64 @@
-{% extends "core/base.html" %}
+{% extends 'core/base.html' %}
 {% load static %}
-
 {% block content %}
-<section class="page-header latest-articles">
-    <div class="container">
-        <h1>{{ title }}</h1>
-        <p>Retrouvez ici toutes nos analyses, tutoriels et reportages sur les dernieres innovations en ingenierie.</p>
+<link rel='stylesheet' href='{% static 'core/assets/css/project.css' %}?v=3'>
+
+<section class='section-page-header'>
+    <div class='container'>
+        <h1>{{ title|default:'Nos Articles' }}</h1>
+        <p>Retrouvez ici toutes nos analyses, tutoriels et reportages sur les dernières innovations en ingénierie.</p>
     </div>
 </section>
 
-<section class="article-list-section latest-articles">
-    <div class="card-list">
-
+<section class='projet-list-section'>
+    <div class='project-grid'>
         {% for article in articles %}
-        <article class="card">
-            <a href="{{ article.get-absolute_url }}" aria-label="Lire : {{ article.title}}">
+        <a href='{{ article.get_absolute_url }}' class='project-card'>
+            <div class='project-image-wrapper'>
                 {% if article.featured_image %}
-                    <img src="{{ article.featured_image.url }}" alt="Image d'illustration pour {{ article.title }}">
+                <img src='{{ article.featured_image.url }}' alt='{{ article.title }}'>
+                {% else %}
+                <img src='{% static 'core/assets/img/default_article.jpg' %}' alt='Image par défaut' style='background: #e2e8f0;'>
                 {% endif %}
+                <span class='badge-difficulty' style='background: var(--accent); color: white;'>{{ article.category.name|default:'Article' }}</span>
+            </div>
 
-                <div class="card-body">
-                    <h3>{{ article.title }}</h3>
-                    <p>{{ article.excerpt }}</p>
-                    <small>Publie le {{ article.publication_date|date:"j F Y"}} par {{ article.author.username }}</small>
+            <div class='project-content'>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.excerpt|default:article.content|striptags|truncatechars:120 }}</p>
+                <div class='project-meta-footer'>
+                    <div class='project-duration'>
+                        <span>{{ article.date_published|date:'d M Y' }}</span>
+                    </div>
+                    <span class='project-cta'>Lire l'article</span>
                 </div>
-            </a>
-        </article>
+            </div>
+        </a>
         {% empty %}
-            <p>Aucun article n'a encore ete publie.</p>
+        <div style='grid-column: 1/-1; text-align: center; padding: 4rem;'>
+            <p>Aucun article n'a encore été publié.</p>
+        </div>
         {% endfor %}
     </div>
+
+    {% if articles.paginator.num_pages > 1 %}
+    <nav class='pagination' aria-label='Pagination des articles' style='margin-top: 4rem; display: flex; justify-content: center; gap: 0.5rem;'>
+        {% if articles.has_previous %}
+        <a href='?page={{ articles.previous_page_number }}' class='cta-button secondary' style='width: auto; display: inline-block;'>&laquo; Précédent</a>
+        {% endif %}
+
+        {% for num in articles.paginator.page_range %}
+        {% if num == articles.number %}
+        <span class='cta-button' style='width: auto; display: inline-block; background: var(--accent); color: white;'>{{ num }}</span>
+        {% else %}
+        <a href='?page={{ num }}' class='cta-button secondary' style='width: auto; display: inline-block;'>{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if articles.has_next %}
+        <a href='?page={{ articles.next_page_number }}' class='cta-button secondary' style='width: auto; display: inline-block;'>Suivant &raquo;</a>
+        {% endif %}
+    </nav>
+    {% endif %}
 </section>
 {% endblock content %}

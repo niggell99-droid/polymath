@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required 
 from .forms import CustomUserCreationForm, UserUpdateForm, ProfileUpdateForm 
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm 
 from django.urls import reverse_lazy
 
 def profil_detail(request, pk):
@@ -27,21 +27,51 @@ def profil_detail(request, pk):
 
     return render(request, 'utilisateurs/profil_detail.html', context)
 
+
+"""def user_login(request):
+    
+    #Vue personnalisée pour la connexion (alternative à django.contrib.auth.views.LoginView).
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            # Rediriger vers l'URL définie par LOGIN_REDIRECT_URL ou 'home'
+            return redirect('home') 
+    else:
+        form = AuthenticationForm()
+
+    context = {
+        'form': form,
+        'title': 'Se connecter',
+    }
+    # Cette vue cherchera le template 'registration/login.html' par défaut, 
+    # tout comme la vue intégrée.
+    return render(request, 'utilisateurs/login.html', context)"""
+
+
 def signup(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        #form = CustomUserCreationForm(request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            user = form.save()
+            #user = form.save()
+            user = form.get_user()
             login(request, user) # Connecte l'utilisateur immédiatement après l'inscription
             return redirect('home') # Redirige vers la page d'accueil
     else:
-        form = CustomUserCreationForm()
+         form = CustomUserCreationForm()
+         if form.is_valid():
+            user = form.save()
+            #user = form.save()
+            login(request, user) # Connecte l'utilisateur immédiatement après l'inscription
+            return redirect('home')
 
     context = {
         'form': form,
         'title': 'Inscription',
     }
-    return render(request, 'registration/signup.html', context)
+    return render(request, 'utilisateurs/login.html', context)
 
 @login_required # Sécurise l'accès à cette vue
 def profile_update(request):
@@ -75,15 +105,20 @@ def profile_update(request):
 
 def register_view(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        from .forms import CustomSignupForm # Local import to avoid circular dependency if any
+        form = CustomSignupForm(request.POST)
         if form.is_valid():
             # 1. Sauvegarde l'utilisateur (le signal de création de Profil s'exécutera ici)
-            user = form.save() 
-            # 2. Connecte l'utilisateur immédiatement après l'inscription (optionnel)
+            user = form.save()
+            # 2. Connecte l'utilisateur immédiatement après l'inscription
             login(request, user)
             # 3. Redirige vers la page d'accueil ou le profil
-            return redirect('home') # Assurez-vous d'avoir un nom d'URL 'home'
+            return redirect('home') 
     else:
-        form = UserCreationForm()
+        from .forms import CustomSignupForm
+        form = CustomSignupForm()
         
     return render(request, 'utilisateurs/register.html', {'form': form})
+
+# Alias for compatibility if needed
+signup = register_view

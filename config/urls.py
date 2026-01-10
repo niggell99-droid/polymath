@@ -27,9 +27,11 @@ urlpatterns = [
     path('projets/', include('projets.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('profils/', include('utilisateurs.urls')),
-    path('comptes/', include('django.contrib.auth.urls')),
+    #path('accounts/', include('allauth.urls')),
+    #path('accounts/', include('django.contrib.auth.urls')),
     path('forum/', include('forum.urls')),
 ]
+
 
 # NE JAMAIS UTILISER CECI EN PRODUCTION ! UNIQUEMENT POUR LE DÉVELOPPEMENT.
 if settings.DEBUG:

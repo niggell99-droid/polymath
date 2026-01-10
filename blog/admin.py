@@ -9,8 +9,8 @@ admin.site.register(Tag)
 # Enregistrement du modèle Article avec personnalisation pour plus de professionnalisme
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'category', 'publication_date', 'is_published', 'is_featured')
-    list_filter = ('category', 'tags', 'is_published', 'is_featured')
+    list_display = ('title', 'author', 'category', 'publication_date', 'is_published')
+    list_filter = ('category', 'tags', 'is_published')
     search_fields = ('title', 'excerpt', 'content')
     prepopulated_fields = {'slug': ('title',)} # Remplissage automatique du slug à partir du titre
     date_hierarchy = 'publication_date'
@@ -21,7 +21,7 @@ class ArticleAdmin(admin.ModelAdmin):
             'fields': ('title', 'slug', 'author', 'category', 'excerpt', 'content')
         }),
         ('Publication & Visibilite', {
-            'fields': ('is_published', 'is_featured', 'publication_date', 'featured_image', 'reading_time', 'video_status'),
+            'fields': ('is_published', 'publication_date', 'featured_image', 'reading_time', 'video_status'),
             'classes': ('collapse',),
         })
     )

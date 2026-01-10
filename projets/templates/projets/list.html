@@ -2,37 +2,55 @@
 {% load static %}
 
 {% block content %}
-<section class="section-page-header latest-articles">
+<link rel="stylesheet" href="{% static 'core/assets/css/project.css' %}?v=1">
+
+<section class="section-page-header">
     <div class="container">
-        <h1>{{ title}}</h1>
-        <p>Explorez notre base de donnees de projets d'ingenierie, classes par difficulte et outils.</p>
+        <h1>{{ title }}</h1>
+        <p>Explorez notre base de données de projets d'ingénierie, classés par difficulté et domaine.</p>
     </div>
 </section>
 
-<section class="projet-list-section latest-articles">
-    <div class="card-list">
+<section class="projet-list-section">
+    <div class="project-grid">
 
         {% for projet in projets %}
-        <article class="card">
-            <a href="{{ projet.get_absolute_url }}" aria-label="Voir le projet : {{ projet.title }}">
+        <a href="{{ projet.get_absolute_url }}" class="project-card" aria-label="Voir le projet : {{ projet.title }}">
+            <div class="project-image-wrapper">
                 {% if projet.main_image %}
-                <img src="{{ projet.main_image.url }}" alt="Image principale pour le projet {{projet.title}}">
+                <img src="{{ projet.main_image.url }}" alt="Image principale pour le projet {{ projet.title }}">
+                {% else %}
+                <!-- Placeholder Image or Pattern -->
+                <div style="width:100%; height:100%; background: linear-gradient(45deg, #1e293b, #334155);"></div>
                 {% endif %}
 
-                <div class="card-body">
-                    <span class="badgedifficulty-{{ projet.difficulty|lower }}">{{ projet.get_difficulty_display }}</span>
+                <span class="badge-difficulty {{ projet.difficulty|lower }}">
+                    {{ projet.get_difficulty_display }}
+                </span>
+            </div>
 
-                    <h3>{{ projet.title }}</h3>
-                    <p>{{ projet.summary }}</p>
+            <div class="project-content">
+                <h3>{{ projet.title }}</h3>
+                <p>{{ projet.summary }}</p>
+            </div>
 
-                    <div class="projet-meta">
-                        <small>Duree estimee : {{ projet.duration|default:"N/A" }}</small>
-                    </div>
-                </div>
-            </a>
-        </article>
+            <div class="project-meta-footer">
+                <span class="project-duration">
+                    <!-- Icone Horloge -->
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    {{ projet.duration|default:"TBC" }}
+                </span>
+                <span class="project-cta">Voir le projet</span>
+            </div>
+        </a>
         {% empty %}
-        <p>Aucun projet n'a encore ete publie</p>
+        <div class="no-projects">
+            <p>Aucun projet n'a encore été publié.</p>
+        </div>
         {% endfor %}
 
     </div>
