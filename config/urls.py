@@ -22,7 +22,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('core/', include('core.urls')),
+    path('', include('core.urls')),  # Page d'accueil à la racine
+    path('core/', include('core.urls')),  # Garde aussi le préfixe core/ pour compatibilité
     path('blog/', include('blog.urls', namespace='blog')),
     path('projets/', include('projets.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
@@ -35,4 +36,8 @@ urlpatterns = [
 
 # NE JAMAIS UTILISER CECI EN PRODUCTION ! UNIQUEMENT POUR LE DÉVELOPPEMENT.
 if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

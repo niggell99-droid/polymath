@@ -86,8 +86,7 @@
                     </a>
                     <p class="excerpt-text">{{ article.excerpt }}</p>
                     <div class="card-footer-meta">
-                        <small>Par <strong>{{ article.author.username }}</strong> — {{ article.publication_date|date:"j
-                            F Y" }}</small>
+                        <small>Par <strong>{{ article.author.username }}</strong> — {{ article.publication_date|date:"j F Y" }}</small>
                     </div>
                 </div>
             </article>
@@ -140,8 +139,7 @@
                 <div class="category-card-item">
                     <a href="{% url 'blog:category_detail' slug=category.slug %}">
                         <h3>{{ category.name }}</h3>
-                        <p>{{ category.description|default:"Découvrez nos articles et projets sur ce sujet passionnant."
-                            }}</p>
+                        <p>{{ category.description|default:"Découvrez nos articles et projets sur ce sujet passionnant." }}</p>
                     </a>
                 </div>
                 {% endfor %}

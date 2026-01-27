@@ -35,13 +35,11 @@
                 {{ field }}
                 {% if field.errors %}
                 {% for error in field.errors %}
-                <small style="color: #fca5a5; font-size: 0.8rem; display: block; margin-top: 0.4rem;">{{ error
-                    }}</small>
+                <small style="color: #fca5a5; font-size: 0.8rem; display: block; margin-top: 0.4rem;">{{ error }}</small>
                 {% endfor %}
                 {% endif %}
                 {% if field.help_text %}
-                <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem; display: block; margin-top: 0.2rem;">{{
-                    field.help_text|safe }}</small>
+                <small style="color: rgba(255,255,255,0.5); font-size: 0.75rem; display: block; margin-top: 0.2rem;">{{ field.help_text|safe }}</small>
                 {% endif %}
             </div>
             {% endfor %}

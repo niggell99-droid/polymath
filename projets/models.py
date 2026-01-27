@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django_ckeditor_5.fields import CKEditor5Field
+from django.contrib.contenttypes.fields import GenericRelation
+from core.models import Comment
 
 
 # Modele pout les outils/technologies specifiques a l'ingenierie (ex : Arduino, CAD, Python, etc.)
@@ -33,6 +35,7 @@ class Projet(models.Model):
     # Relations
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     tools = models.ManyToManyField(Tool, blank=True) # Les outils / technologies utilises
+    comments = GenericRelation(Comment)
 
     # Metadonnees
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES, default='MOYEN')

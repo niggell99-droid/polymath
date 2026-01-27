@@ -2,12 +2,25 @@
    AUTHENTICATION PAGES (GLASSMORPHISM)
    ========================================= */
 
+/* Override main margin for auth pages (no secondary nav) */
+.auth-page-container~main,
+main:has(.auth-page-container) {
+  margin-top: 60px !important;
+}
+
+/* Self-contained fix: When auth-page-container is present, adjust via negative margin */
 .auth-page-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
+  margin-top: -45px;
+  /* Compensate for the extra margin from secondary nav absence */
+  padding-top: 45px;
+  /* Add it back as padding */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 2rem;
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #1e293b, #0f172a);

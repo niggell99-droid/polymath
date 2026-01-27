@@ -3,6 +3,8 @@ from django.contrib.auth.models import User # On utilise le modèle User natif d
 from django.urls import reverse 
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericRelation
+from core.models import Comment
 
 # 1. Modèle pour les Catégories
 class Category(models.Model):
@@ -45,6 +47,7 @@ class Article(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE) # L'auteur
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True) # Catégorie principale (SET_NULL permet de ne pas supprimer l'article si la catégorie est supprimée)
     tags = models.ManyToManyField(Tag, blank=True) # Multiples tags
+    comments = GenericRelation(Comment)
 
     # Médias
     featured_image = models.ImageField(upload_to='article_images/', blank=True, null=True)
